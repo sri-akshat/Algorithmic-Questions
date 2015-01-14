@@ -1,8 +1,6 @@
 package su.dataStructure;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,6 +48,11 @@ public class Vertex<T> {
     public void addEdge(Edge edge) {
 
         this.edges.add(edge);
+    }
+
+    public void addEdge(Vertex v2) {
+
+        this.edges.add(new Edge(this,v2));
     }
 
     public Edge getMinEdge() {
