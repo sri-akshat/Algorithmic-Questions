@@ -14,6 +14,7 @@ public class TestTreeDiameter {
     {
         Node node = TestUtils.createBinaryTree();
         TreeDiameter longestDistanceBetween2Nodes = new TreeDiameter();
-        Assert.assertEquals(4, longestDistanceBetween2Nodes.compute(node));
+        longestDistanceBetween2Nodes.compute(node);
+        Assert.assertEquals(4, longestDistanceBetween2Nodes.maxDia);
     }
 }

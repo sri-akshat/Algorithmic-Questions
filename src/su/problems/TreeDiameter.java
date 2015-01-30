@@ -10,8 +10,8 @@ public class TreeDiameter {
     int maxDia = 0;
     public int compute(Node node) {
 
-        int leftDia = -1;
-        int rightDia = -1;
+        int leftDia = 0;
+        int rightDia = 0;
 
         if(node.left!=null)
             leftDia = compute(node.left);
@@ -22,6 +22,6 @@ public class TreeDiameter {
         if(leftDia+rightDia > maxDia)
             maxDia = leftDia+rightDia;
 
-        return maxDia;
+        return Math.max(leftDia,rightDia)+1;
     }
 }
