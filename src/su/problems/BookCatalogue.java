@@ -11,6 +11,7 @@ public class BookCatalogue {
 
     private TrieNode<Book> treeByGenre;
 
+//  TODO :  Remove genre and search should work for all genres
 
     public BookCatalogue() {
         treeByGenre =  new TrieNode<>('#');

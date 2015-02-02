@@ -1,6 +1,7 @@
 package su;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Akshat on 5/7/2014.
@@ -18,7 +19,7 @@ public class TestUtils {
         return createBinaryTreeRecursive(root, numbers);
     }
 
-    public static su.dataStructure.Node createBinaryTree(ArrayList<Integer> numbers) {
+    public static su.dataStructure.Node createBinaryTree(List<Integer> numbers) {
 
         su.dataStructure.Node root = new su.dataStructure.Node(numbers.get(1));
         root.parent = null;
@@ -28,7 +29,7 @@ public class TestUtils {
         return createBinaryTreeRecursive(root, numbers);
     }
 
-    public static su.dataStructure.Node createBinaryTreeRecursive(su.dataStructure.Node root, ArrayList<Integer> numbers) {
+    public static su.dataStructure.Node createBinaryTreeRecursive(su.dataStructure.Node root, List<Integer> numbers) {
 
         if(root.left==null && 2*root.getIndex() < numbers.size()){
             root.left = new su.dataStructure.Node(numbers.get(2*root.getIndex()), 2*root.getIndex());

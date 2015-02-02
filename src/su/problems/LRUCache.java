@@ -26,12 +26,22 @@ public class LRUCache<K,V> {
 
     public V get(K key)
     {
+        deque.remove(key);
+        deque.push(key);
+
         return map.get(key);
     }
 
     public void put(K key, V value)
     {
-        deque.
+        if(map.size()==PAGE_SIZE)
+        {
+            K removedKey = deque.removeLast();
+            map.remove(removedKey);
+        }
+
+        map.put(key, value);
+        deque.push(key);
     }
 
 }
