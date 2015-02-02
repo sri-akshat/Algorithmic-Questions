@@ -1,0 +1,1348 @@
+Index: src/su/dataStructure/Vertex.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/dataStructure/Vertex.java	(date 1421251729000)
++++ src/su/dataStructure/Vertex.java	(date 1421251729000)
+@@ -1,8 +1,6 @@
+ package su.dataStructure;
+ 
+-import java.util.ArrayList;
+ import java.util.HashSet;
+-import java.util.List;
+ import java.util.Set;
+ 
+ /**
+@@ -50,6 +48,11 @@
+     public void addEdge(Edge edge) {
+ 
+         this.edges.add(edge);
++    }
++
++    public void addEdge(Vertex v2) {
++
++        this.edges.add(new Edge(this,v2));
+     }
+ 
+     public Edge getMinEdge() {
+\ No newline at end of file
+Index: src/su/problems/AllSourceToDestinationPaths.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/AllSourceToDestinationPaths.java	(date 1421251729000)
++++ src/su/problems/AllSourceToDestinationPaths.java	(date 1421251729000)
+@@ -0,0 +1,58 @@
++package su.problems;
++
++import su.dataStructure.Edge;
++import su.dataStructure.Graph;
++import su.dataStructure.Vertex;
++
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Set;
++
++/**
++ * Created by Akshat on 1/17/2015.
++ *
++ * Given a directed graph, a source vertex ‘s’ and a destination vertex ‘d’, print all paths from given ‘s’ to ‘d’.
++
++ Consider the following directed graph. Let the s be 2 and d be 3. There are 4 different paths from 2 to 3.
++
++ 2=0->3
++ \ | /
++   1
++
++ 2 to 3
++ 2->1->3
++ 2->0->3
++ 2->0->1->3
++
++ *
++ */
++public class AllSourceToDestinationPaths {
++    public List<String> compute(Graph graph, Vertex start, Vertex end) {
++        return traverseGraph(start, end, "", new ArrayList<String>(), new HashSet<>());
++    }
++
++    private List<String> traverseGraph(Vertex current, Vertex end, String path, List<String> paths, Set<Integer> pathTracker) {
++
++        if(current == end)
++        {
++            path += current.getData()+"-";
++            paths.add(path.substring(0, path.length()-1));
++            return paths;
++        }
++
++        if(pathTracker.contains(current.getData()))
++        {
++            return paths;
++        }
++
++        for(Edge edge : (Set<Edge>)current.getEdges())
++        {
++            Set<Integer> newPathTracker = new HashSet<>(pathTracker);
++            newPathTracker.add((Integer) current.getData());
++            traverseGraph(edge.getVertex2(), end, path + current.getData() + "-", paths, newPathTracker);
++        }
++
++        return paths;
++    }
++}
+Index: src/su/problems/BSTSum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/BSTSum.java	(date 1421251729000)
++++ src/su/problems/BSTSum.java	(date 1421251729000)
+@@ -0,0 +1,21 @@
++package su.problems;
++
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class BSTSum {
++    public int compute(Node node, int sum){
++
++        if(node.right!=null)
++            sum = compute(node.right, sum);
++
++        sum += node.getIntData();
++        node.setData(sum);
++
++        if(node.left!=null)
++            sum = compute(node.left, sum);
++        return sum;
++    }
++}
+Index: src/su/problems/IncreasingDecreasingArray.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/IncreasingDecreasingArray.java	(date 1421251729000)
++++ src/su/problems/IncreasingDecreasingArray.java	(date 1421251729000)
+@@ -0,0 +1,71 @@
++package su.problems;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ *
++ *  Find element in an array which have elements in first increasing and then decreasing order.
++ *
++ */
++public class IncreasingDecreasingArray {
++
++    public boolean search(int[] array, int query){
++
++        int hillTop = hillTopBST(array, 0, array.length-1);
++        return bst(array, query, 0, hillTop) || rBST(array, query, hillTop+1, array.length-1);
++    }
++
++    private int hillTopBST(int[] array, int start, int end)
++    {
++        if(start>end)
++            return -1;
++
++        int mid = (start + end)/2;
++        if(array[mid]>array[mid-1] && array[mid]>array[mid+1])
++        {
++            return mid;
++        }
++
++        if(array[mid]>array[mid-1] && array[mid]<array[mid+1])
++            return hillTopBST(array, mid+1, end);
++        if(array[mid]<array[mid-1] && array[mid]>array[mid+1])
++            return hillTopBST(array, start, mid-1);
++
++        return -1;
++    }
++
++    private boolean bst(int[] array, int query, int start, int end)
++    {
++        if(start>end)
++            return false;
++
++        int mid = (start+end)/2;
++
++        if(query == array[mid])
++            return true;
++        if(query > array[mid])
++            return bst(array, query, mid+1, end);
++        if(query < array[mid])
++            return bst(array, query, start, mid-1);
++
++        return false;
++    }
++
++
++
++    private boolean rBST(int[] array, int query, int start, int end)
++    {
++        if(start>end)
++            return false;
++
++        int mid = (start+end)/2;
++
++        if(query == array[mid])
++            return true;
++        if(query < array[mid])
++            return bst(array, query, mid+1, end);
++        if(query > array[mid])
++            return bst(array, query, start, mid-1);
++
++        return false;
++    }
++}
+Index: src/su/problems/PruneTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/PruneTree.java	(date 1421251729000)
++++ src/su/problems/PruneTree.java	(date 1421251729000)
+@@ -0,0 +1,74 @@
++package su.problems;
++
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/16/2015.
++ *
++ * Given a Binary Tree and a number k, remove all nodes that lie only on root to leaf path(s) of length smaller than k. If a node X lies on multiple root-to-leaf paths and if any of the paths has path length >= k, then X is not deleted from Binary Tree. In other words a node is deleted if all paths going through it have lengths smaller than k.
++
++ Consider the following example Binary Tree
++
++ 1
++ /      \
++ 2          3
++ /     \         \
++ 4         5        6
++ /                   /
++ 7                   8
++ Input: Root of above Binary Tree
++ k = 4
++
++ Output: The tree should be changed to following
++ 1
++ /     \
++ 2          3
++ /             \
++ 4                 6
++ /                  /
++ 7                  8
++ There are 3 paths
++ i) 1->2->4->7      path length = 4
++ ii) 1->2->5        path length = 3
++ iii) 1->3->6->8    path length = 4
++ There is only one path " 1->2->5 " of length smaller than 4.
++ The node 5 is the only node that lies only on this path, so
++ node 5 is removed.
++ Nodes 2 and 1 are not removed as they are parts of other paths
++ of length 4 as well.
++
++ If k is 5 or greater than 5, then whole tree is deleted.
++
++ If k is 3 or less than 3, then nothing is deleted.
++ *
++ */
++public class PruneTree
++{
++    public int removeNodeForLTkLength(Node node, int k, int level) {
++
++        int leftLen = -1;
++        int rightLen = -1;
++
++        if(node.left!=null){
++            leftLen = removeNodeForLTkLength(node.left,k,level+1);
++        }
++
++        if(node.right!=null){
++            rightLen = removeNodeForLTkLength(node.right,k, level+1);
++        }
++
++        if(leftLen < level)
++            leftLen = level;
++
++        if(rightLen < level)
++            rightLen = level;
++
++        if(Math.max(leftLen, rightLen) < k)
++        {
++            System.out.println("deleted "+node.getData());
++            node.setData(null);
++        }
++
++        return Math.max(leftLen, rightLen);
++    }
++}
+Index: src/su/problems/RootToLeafSum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/RootToLeafSum.java	(date 1421251729000)
++++ src/su/problems/RootToLeafSum.java	(date 1421251729000)
+@@ -0,0 +1,28 @@
++package su.problems;
++
++import su.dataStructure.Node;
++
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class RootToLeafSum {
++    public List<Integer> compute(Node node, int sum, List<Integer> list){
++
++        if(node.left!=null){
++            compute(node.left, sum+node.getIntData(), list);
++        }
++
++        if(node.right!=null){
++            compute(node.right, sum+node.getIntData(), list);
++        }
++
++        if(node.left==null && node.right==null)
++        {
++            list.add(sum+node.getIntData());
++        }
++        return list;
++    }
++
++}
+Index: src/su/problems/TreeRelation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/TreeRelation.java	(date 1421251729000)
++++ src/su/problems/TreeRelation.java	(date 1421251729000)
+@@ -0,0 +1,56 @@
++package su.problems;
++
++import su.dataStructure.Node;
++
++import java.util.LinkedList;
++import java.util.Queue;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class TreeRelation {
++
++    public boolean areCousins(Node root, int x, int y)
++    {
++        Queue<Node> queue = new LinkedList<Node>();
++        queue.add(root);
++        queue.add(null);
++
++        do{
++            Node curr = queue.remove();
++            if(curr==null){
++                if(queue.peek()!=null)
++                    queue.add(null);
++                else
++                    break;
++            }else{
++                if(curr.getIntData()==x){
++                    while(queue.peek()!=null){
++                        curr = queue.remove();
++                        if(curr.getIntData()==y)
++                        {
++                            return true;
++                        }
++                    }
++                    return false;
++                }
++
++                if(curr.getIntData()==y){
++                    while(queue.peek()!=null){
++                        curr = queue.remove();
++                        if(curr.getIntData()==x)
++                        {
++                            return true;
++                        }
++                    }
++                    return false;
++                }
++
++                queue.add(curr.left);
++                queue.add(curr.right);
++            }
++        }while(true);
++
++        return false;
++    }
++}
+Index: testSrc/su/problems/TestAllSourceToDestinationPaths.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestAllSourceToDestinationPaths.java	(date 1421251729000)
++++ testSrc/su/problems/TestAllSourceToDestinationPaths.java	(date 1421251729000)
+@@ -0,0 +1,42 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.dataStructure.Graph;
++import su.dataStructure.Vertex;
++
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/17/2015.
++ */
++public class TestAllSourceToDestinationPaths {
++
++    @org.junit.Test
++    public void testCompute()
++    {
++        Graph graph = new Graph();
++        Vertex<Integer> v2 = new Vertex<>(2);
++        graph.addVertex(v2);
++        Vertex<Integer> v0 = new Vertex<>(0);
++        graph.addVertex(v0);
++        Vertex<Integer> v1 = new Vertex<>(1);
++        graph.addVertex(v1);
++        Vertex<Integer> v3 = new Vertex<>(3);
++        graph.addVertex(v3);
++
++        v2.addEdge(v0);
++        v2.addEdge(v1);
++
++        v0.addEdge(v2);
++        v0.addEdge(v1);
++        v0.addEdge(v3);
++
++        v1.addEdge(v3);
++
++        AllSourceToDestinationPaths allSourceToDestinationPaths = new AllSourceToDestinationPaths();
++        List<String> paths = allSourceToDestinationPaths.compute(graph, v2, v3);
++        Assert.assertTrue(paths.contains("2-1-3"));
++        Assert.assertTrue(paths.contains("2-0-3"));
++        Assert.assertTrue(paths.contains("2-0-1-3"));
++    }
++}
+Index: testSrc/su/problems/TestBSTSum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestBSTSum.java	(date 1421251729000)
++++ testSrc/su/problems/TestBSTSum.java	(date 1421251729000)
+@@ -0,0 +1,26 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.TestUtils;
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class TestBSTSum {
++
++    @org.junit.Test
++    public void testCompute()
++    {
++        Node node = TestUtils.createBinaryTree();
++        BSTSum bstSum = new BSTSum();
++        bstSum.compute(node,0);
++        Assert.assertEquals(70, node.getIntData().intValue());
++        Assert.assertEquals(83, node.left.getIntData().intValue());
++        Assert.assertEquals(38, node.right.getIntData().intValue());
++        Assert.assertEquals(86, node.left.left.getIntData().intValue());
++        Assert.assertEquals(77, node.left.right.getIntData().intValue());
++        Assert.assertEquals(20, node.right.right.getIntData().intValue());
++        Assert.assertEquals(55, node.right.left.getIntData().intValue());
++    }
++}
+Index: testSrc/su/problems/TestIncreasingDecreasingArray.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestIncreasingDecreasingArray.java	(date 1421251729000)
++++ testSrc/su/problems/TestIncreasingDecreasingArray.java	(date 1421251729000)
+@@ -0,0 +1,29 @@
++package su.problems;
++
++import org.junit.Assert;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class TestIncreasingDecreasingArray {
++
++    @org.junit.Test
++    public void testSearch()
++    {
++        int[] arr = {8, 10, 20, 80, 100, 200, 400, 500, 3, 2, 1};
++        IncreasingDecreasingArray increasingDecreasingArray = new IncreasingDecreasingArray();
++        Assert.assertTrue(increasingDecreasingArray.search(arr, 10));
++        Assert.assertTrue(increasingDecreasingArray.search(arr, 500));
++        Assert.assertTrue(increasingDecreasingArray.search(arr, 1));
++        Assert.assertTrue(increasingDecreasingArray.search(arr, 2));
++    }
++
++    @org.junit.Test
++    public void testSearch1()
++    {
++        int[] arr = {8, 10, 20, 80, 100, 200, 400, 500, 3, 2, 1};
++        IncreasingDecreasingArray increasingDecreasingArray = new IncreasingDecreasingArray();
++        Assert.assertFalse(increasingDecreasingArray.search(arr, 11));
++    }
++}
++
+Index: testSrc/su/problems/TestPruneTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestPruneTree.java	(date 1421251729000)
++++ testSrc/su/problems/TestPruneTree.java	(date 1421251729000)
+@@ -0,0 +1,60 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.TestUtils;
++import su.dataStructure.Node;
++
++import java.util.ArrayList;
++
++/**
++ * Created by Akshat on 1/16/2015.
++ */
++public class TestPruneTree {
++
++    @org.junit.Test
++    public void testRemoveNodeForLTkLength()
++    {
++        Node binaryTree = TestUtils.createBinaryTree(getIntegerList());
++        PruneTree pruneTree = new PruneTree();
++        Assert.assertNotNull(binaryTree.left.right);
++        binaryTree.setLevel(1);
++        pruneTree.removeNodeForLTkLength(binaryTree, 4, 1);
++        Assert.assertNull(binaryTree.left.right.getData());
++    }
++
++    @org.junit.Test
++    public void testRemoveNodeForLTkLength1()
++    {
++        Node binaryTree = TestUtils.createBinaryTree(getIntegerList());
++        PruneTree pruneTree = new PruneTree();
++        Assert.assertNotNull(binaryTree.left.right);
++        binaryTree.setLevel(1);
++        pruneTree.removeNodeForLTkLength(binaryTree, 5, 1);
++        Assert.assertNull(binaryTree.getData());
++        Assert.assertNull(binaryTree.left.getData());
++        Assert.assertNull(binaryTree.right.getData());
++        Assert.assertNull(binaryTree.left.right.getData());
++        Assert.assertNull(binaryTree.left.left.getData());
++        Assert.assertNull(binaryTree.right.right.getData());
++    }
++
++    private static ArrayList<Integer> getIntegerList() {
++        ArrayList<Integer> numbers = new ArrayList<Integer>();
++        numbers.add(-1);  // unused 0th index
++        numbers.add(1);
++        numbers.add(2);
++        numbers.add(3);
++        numbers.add(4);
++        numbers.add(5);
++        numbers.add(null);
++        numbers.add(6);
++        numbers.add(7);
++        numbers.add(null);
++        numbers.add(null);
++        numbers.add(null);
++        numbers.add(null);
++        numbers.add(null);
++        numbers.add(8);
++        return numbers;
++    }
++}
+Index: testSrc/su/problems/TestRootToLeafSum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestRootToLeafSum.java	(date 1421251729000)
++++ testSrc/su/problems/TestRootToLeafSum.java	(date 1421251729000)
+@@ -0,0 +1,27 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.TestUtils;
++import su.dataStructure.Node;
++
++import java.util.ArrayList;
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class TestRootToLeafSum {
++
++    @org.junit.Test
++    public void testCompute()
++    {
++        Node node = TestUtils.createBinaryTree();
++        RootToLeafSum rootToLeafSum = new RootToLeafSum();
++        List<Integer> list = rootToLeafSum.compute(node, 0, new ArrayList<Integer>());
++        Assert.assertEquals(4, list.size());
++        Assert.assertTrue(list.contains(24));
++        Assert.assertTrue(list.contains(28));
++        Assert.assertTrue(list.contains(50));
++        Assert.assertTrue(list.contains(53));
++    }
++}
+Index: testSrc/su/problems/TestTreeRelation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestTreeRelation.java	(date 1421251729000)
++++ testSrc/su/problems/TestTreeRelation.java	(date 1421251729000)
+@@ -0,0 +1,27 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.TestUtils;
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/18/2015.
++ */
++public class TestTreeRelation {
++
++    @org.junit.Test
++    public void testAreCousins()
++    {
++        Node node = TestUtils.createBinaryTree();
++        TreeRelation treeRelation = new TreeRelation();
++        Assert.assertTrue(treeRelation.areCousins(node, 3, 17));
++    }
++
++    @org.junit.Test
++    public void testAreCousins1()
++    {
++        Node node = TestUtils.createBinaryTree();
++        TreeRelation treeRelation = new TreeRelation();
++        Assert.assertFalse(treeRelation.areCousins(node, 3, 15));
++    }
++}
+Index: .idea/uiDesigner.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/uiDesigner.xml	(date 1422511502000)
++++ .idea/uiDesigner.xml	(date 1422511502000)
+@@ -0,0 +1,125 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Palette2">
++    <group name="Swing">
++      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
++      </item>
++      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
++        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
++        <initial-values>
++          <property name="text" value="Button" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="RadioButton" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="CheckBox" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
++        <initial-values>
++          <property name="text" value="Label" />
++        </initial-values>
++      </item>
++      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
++          <preferred-size width="150" height="-1" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
++          <preferred-size width="150" height="50" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
++          <preferred-size width="200" height="200" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
++      </item>
++      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
++      </item>
++      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
++          <preferred-size width="-1" height="20" />
++        </default-constraints>
++      </item>
++      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
++        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
++      </item>
++      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
++        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
++      </item>
++    </group>
++  </component>
++</project>
++
+Index: src/su/problems/GenIntArrayPermutations.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/GenIntArrayPermutations.java	(date 1422511502000)
++++ src/su/problems/GenIntArrayPermutations.java	(date 1422511502000)
+@@ -0,0 +1,34 @@
++package su.problems;
++
++import java.util.ArrayList;
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/21/2015.
++ */
++public class GenIntArrayPermutations {
++
++    private List<List<Integer>> permutations = new ArrayList<>();
++    public void compute(List<Integer> arr, List<Integer> permutation) {
++
++        if(arr.isEmpty()) {
++            System.out.println();
++            permutation.forEach(System.out::print);
++            permutations.add(permutation);
++            return;
++        }
++
++        for(int j=0;j<arr.size();j++)
++        {
++            List<Integer> newPermutation = new ArrayList<>(permutation);
++            newPermutation.add(arr.get(j));
++            List<Integer> newList = new ArrayList<>(arr.subList(0, j));
++            newList.addAll(arr.subList(j+1, arr.size()));
++            compute(newList, newPermutation);
++        }
++    }
++
++    public List<List<Integer>> getPermutations() {
++        return permutations;
++    }
++}
+Index: src/su/problems/LCABinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/LCABinaryTree.java	(date 1422511502000)
++++ src/su/problems/LCABinaryTree.java	(date 1422511502000)
+@@ -0,0 +1,36 @@
++package su.problems;
++
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/27/2015.
++ */
++public class LCABinaryTree {
++
++    public Node lca(Node node, int target1, int target2){
++
++        if(node==null)
++            return node;
++
++        // If either n1 or n2 matches with root's key, report
++        // the presence by returning root (Note that if a key is
++        // ancestor of other, then the ancestor key becomes LCA
++        if(node.getIntData() == target1 || node.getIntData() == target2)
++        {
++            return node;
++        }
++
++        Node left = lca(node.left, target1, target2);
++        Node right = lca(node.right, target1, target2);
++
++        // If both of the above calls return Non-NULL, then one key
++        // is present in once subtree and other is present in other,
++        // So this node is the LCA
++        if(left!=null && right!=null) {
++            return node;
++        }
++
++        // Otherwise check if left subtree or right subtree is LCA
++        return left!=null?left:right;
++    }
++}
+Index: src/su/problems/LexicographicSorting.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/LexicographicSorting.java	(date 1422511502000)
++++ src/su/problems/LexicographicSorting.java	(date 1422511502000)
+@@ -0,0 +1,34 @@
++package su.problems;
++
++import java.util.Collections;
++import java.util.Comparator;
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/29/2015.
++ */
++public class LexicographicSorting implements Comparator<String> {
++    public List<String> sort(List<String> list) {
++
++        Collections.sort(list);
++        list.forEach(System.out::println);
++        return list;
++    }
++
++    @Override
++    public int compare(String s1, String s2)
++    {
++        int minLen = s1.length() > s2.length() ? s2.length() : s1.length();
++        for(int i=0;i<minLen;i++)
++        {
++            if(s1.charAt(i)>s2.charAt(i))
++            {
++              return 1;
++            }else if(s1.charAt(i)>s2.charAt(i))
++            {
++                return -1;
++            }
++        }
++        return 0;
++    }
++}
+Index: src/su/problems/NumToWord.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/NumToWord.java	(date 1421251729000)
++++ src/su/problems/NumToWord.java	(date 1422511502000)
+@@ -50,7 +50,7 @@
+     public String getWord(int[] arr, StringBuilder sb)
+     {
+         if(arr.length==0)
+-            return sb.toString();
++            return sb.substring(0,sb.length()-1);
+ 
+         int curr ;
+         if(arr.length%2!=0){
+@@ -73,7 +73,7 @@
+ 
+         int[] newArr = new int[arr.length-1];
+         System.arraycopy(arr,1,newArr,0, arr.length-1);
+-        getWord(newArr, sb);
+-        return sb.substring(0,sb.length()-1);
++
++        return getWord(newArr, sb);
+     }
+ }
+Index: src/su/problems/threads/PrintOddEvenNum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/threads/PrintOddEvenNum.java	(date 1422511502000)
++++ src/su/problems/threads/PrintOddEvenNum.java	(date 1422511502000)
+@@ -0,0 +1,71 @@
++package su.problems.threads;
++
++/**
++ * Created by Akshat on 1/29/2015.
++ */
++public class PrintOddEvenNum {
++
++    static int[] arr = new int[11];
++
++    public int[] execute() throws InterruptedException {
++
++        Thread thread1 = new Thread(new Thread1(),"evenT");
++        Thread thread2 = new Thread(new Thread2(),"oddT");
++
++        thread1.start();
++        thread2.start();
++
++        thread1.join();
++
++        return arr;
++    }
++
++    class Thread1 implements Runnable{
++
++        @Override
++        public void run()
++        {
++            synchronized(PrintOddEvenNum.class){
++                for(int i=0;i<11;i=i+2)
++                {
++                    arr[i] = i;
++                    System.out.println(i+"-"+Thread.currentThread().getName());
++                    try {
++                        PrintOddEvenNum.class.notifyAll();
++                        PrintOddEvenNum.class.wait();
++                    } catch (InterruptedException e) {
++                        e.printStackTrace();
++                    }
++                }
++                PrintOddEvenNum.class.notifyAll();
++            }
++        }
++
++    }
++
++    class Thread2 implements Runnable{
++
++        @Override
++        public void run()
++        {
++            synchronized(PrintOddEvenNum.class){
++                for(int i=1;i<10;i=i+2)
++                {
++                    arr[i] = i;
++                    System.out.println(i+"-"+Thread.currentThread().getName());
++
++                    try {
++                        PrintOddEvenNum.class.notifyAll();
++                        PrintOddEvenNum.class.wait();
++                    } catch (InterruptedException e) {
++                        e.printStackTrace();
++                    }
++                }
++                PrintOddEvenNum.class.notifyAll();
++            }
++        }
++
++    }
++}
++
++
+Index: testSrc/su/problems/TestGenIntArrayPermutations.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestGenIntArrayPermutations.java	(date 1422511502000)
++++ testSrc/su/problems/TestGenIntArrayPermutations.java	(date 1422511502000)
+@@ -0,0 +1,26 @@
++package su.problems;
++
++import org.junit.*;
++
++import java.util.ArrayList;
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/21/2015.
++ */
++public class TestGenIntArrayPermutations {
++
++    @org.junit.Test
++    public void testCompute(){
++        GenIntArrayPermutations genIntArrayPermutations = new GenIntArrayPermutations();
++        List<Integer> inputList = new ArrayList<>();
++        inputList.add(1);
++        inputList.add(2);
++        inputList.add(3);
++        inputList.add(4);
++        inputList.add(5);
++        List<Integer> newList = new ArrayList<>();
++        genIntArrayPermutations.compute(inputList, newList);
++        Assert.assertEquals(120, genIntArrayPermutations.getPermutations().size());
++    }
++}
+Index: testSrc/su/problems/TestLCABinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestLCABinaryTree.java	(date 1422511502000)
++++ testSrc/su/problems/TestLCABinaryTree.java	(date 1422511502000)
+@@ -0,0 +1,19 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.TestUtils;
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/27/2015.
++ */
++public class TestLCABinaryTree {
++
++    @org.junit.Test
++    public void testLca()
++    {
++        Node node = TestUtils.createBinaryTree();
++        LCABinaryTree lcaBinaryTree = new LCABinaryTree();
++        Assert.assertEquals(15,lcaBinaryTree.lca(node, 3, 17).getIntData().intValue());
++    }
++}
+Index: testSrc/su/problems/TestLexicographicSorting.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestLexicographicSorting.java	(date 1422511502000)
++++ testSrc/su/problems/TestLexicographicSorting.java	(date 1422511502000)
+@@ -0,0 +1,34 @@
++package su.problems;
++
++import org.junit.Assert;
++
++import java.util.ArrayList;
++import java.util.List;
++
++/**
++ * Created by Akshat on 1/29/2015.
++ */
++public class TestLexicographicSorting {
++
++    @org.junit.Test
++    public void testSort()
++    {
++        List<String> list = new ArrayList<>();
++        list.add("Zak");
++        list.add("Ybk");
++        list.add("Yak");
++        list.add("Pak");
++        list.add("Hak");
++        list.add("Fak");
++        list.add("Dak");
++        LexicographicSorting obj = new LexicographicSorting();
++        List<String> sortedList = obj.sort(list);
++        Assert.assertEquals("Dak", sortedList.get(0));
++        Assert.assertEquals("Fak", sortedList.get(1));
++        Assert.assertEquals("Hak", sortedList.get(2));
++        Assert.assertEquals("Pak", sortedList.get(3));
++        Assert.assertEquals("Yak", sortedList.get(4));
++        Assert.assertEquals("Ybk", sortedList.get(5));
++        Assert.assertEquals("Zak", sortedList.get(6));
++    }
++}
+Index: testSrc/su/problems/threads/TestPrintOddEvenNum.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/threads/TestPrintOddEvenNum.java	(date 1422511502000)
++++ testSrc/su/problems/threads/TestPrintOddEvenNum.java	(date 1422511502000)
+@@ -0,0 +1,28 @@
++package su.problems.threads;
++
++import org.junit.Assert;
++import org.junit.Test;
++
++/**
++ * Created by Akshat on 1/29/2015.
++ */
++public class TestPrintOddEvenNum {
++
++    @Test
++    public void testExecute() throws InterruptedException {
++        int[] arr = new PrintOddEvenNum().execute();
++        Assert.assertEquals(0,arr[0]);
++        Assert.assertEquals(1,arr[1]);
++        Assert.assertEquals(2,arr[2]);
++        Assert.assertEquals(3,arr[3]);
++        Assert.assertEquals(4,arr[4]);
++        Assert.assertEquals(5,arr[5]);
++        Assert.assertEquals(6,arr[6]);
++        Assert.assertEquals(7,arr[7]);
++        Assert.assertEquals(8,arr[8]);
++        Assert.assertEquals(9,arr[9]);
++        Assert.assertEquals(10,arr[10]);
++    }
++
++
++}
+Index: src/su/problems/BasinHill.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/BasinHill.java	(date 1422591058000)
++++ src/su/problems/BasinHill.java	(date 1422591058000)
+@@ -0,0 +1,48 @@
++package su.problems;
++
++import java.util.Collections;
++import java.util.HashMap;
++import java.util.List;
++import java.util.Map;
++
++/**
++ * Created by Akshat on 1/23/2015.
++ */
++public class BasinHill {
++
++    public Integer[] compute(int[][] grid) {
++
++        Map<Integer, Integer> basinMap = new HashMap<>();
++        int identifier = 'a';
++        for(int i=0;i<grid.length;i++)
++        {
++            for(int j=0;j<grid.length;j++)
++            {
++                if(grid[i][j]!=-1) {
++
++                    traverseCanal(i,j,grid,basinMap,0,-identifier++);
++                }
++            }
++        }
++
++        List<Integer> basinArea = (List<Integer>) basinMap.values();
++        Collections.sort(basinArea);
++        Integer[] arr = (Integer[]) basinArea.toArray();
++        return arr;
++    }
++
++    private void traverseCanal(int i, int j, int[][] grid, Map<Integer, Integer> basinMap, int count, int identifier)
++    {
++        int curr = grid[i][j];
++        int top = i==0?Integer.MAX_VALUE:grid[i-1][j];
++        int bottom = i==grid.length-1?Integer.MAX_VALUE:grid[i+1][j];
++        int left = j==0?Integer.MAX_VALUE:grid[i][j-1];
++        int right = j==grid.length-1?Integer.MAX_VALUE:grid[i][j+1];
++
++        //base condition - if basin
++        if(curr<top && curr<bottom && curr<right && curr<left)
++        {
++
++        }
++    }
++}
+Index: src/su/problems/LRUCache.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/LRUCache.java	(date 1422511502000)
++++ src/su/problems/LRUCache.java	(date 1422591058000)
+@@ -1,5 +1,10 @@
+ package su.problems;
+ 
++import java.util.Deque;
++import java.util.concurrent.ConcurrentHashMap;
++import java.util.concurrent.ConcurrentLinkedDeque;
++import java.util.concurrent.ConcurrentMap;
++
+ /**
+  * Created with IntelliJ IDEA.
+  * User: Akshat
+@@ -7,12 +12,26 @@
+  * Time: 11:04 AM
+  * To change this template use File | Settings | File Templates.
+  */
+-public class LRUCache {
+-    public static void main(String[] args){
++public class LRUCache<K,V> {
+ 
++    private final ConcurrentMap<K,V> map = new ConcurrentHashMap<K,V>();
++    private Deque<K> deque = new ConcurrentLinkedDeque<>();
+ 
+ 
++    private int PAGE_SIZE = 0;
+ 
++    public LRUCache(int PAGE_SIZE){
++        this.PAGE_SIZE = PAGE_SIZE;
++    }
+ 
++    public V get(K key)
++    {
++        return map.get(key);
+     }
++
++    public void put(K key, V value)
++    {
++        deque.
++    }
++
+ }
+Index: src/su/problems/TreeDiameter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/su/problems/TreeDiameter.java	(date 1422591058000)
++++ src/su/problems/TreeDiameter.java	(date 1422591058000)
+@@ -0,0 +1,27 @@
++package su.problems;
++
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/19/2015.
++ */
++public class TreeDiameter {
++
++    int maxDia = 0;
++    public int compute(Node node) {
++
++        int leftDia = 0;
++        int rightDia = 0;
++
++        if(node.left!=null)
++            leftDia = compute(node.left);
++
++        if(node.right!=null)
++            rightDia = compute(node.right);
++
++        if(leftDia+rightDia > maxDia)
++            maxDia = leftDia+rightDia;
++
++        return Math.max(leftDia,rightDia)+1;
++    }
++}
+Index: testSrc/su/problems/TestBasinHill.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestBasinHill.java	(date 1422591058000)
++++ testSrc/su/problems/TestBasinHill.java	(date 1422591058000)
+@@ -0,0 +1,25 @@
++package su.problems;
++
++import org.junit.Assert;
++
++/**
++ * Created by Akshat on 1/23/2015.
++ */
++public class TestBasinHill {
++
++    @org.junit.Test
++    public void testComputeBasins()
++    {
++        int[][] grid = {
++                {1, 0, 2, 5, 8},
++                {2, 3, 4, 7, 9},
++                {3, 5, 7, 8, 9},
++                {1, 2, 5, 4, 2},
++                {3, 3, 5, 2, 1}};
++        BasinHill basinHill = new BasinHill();
++        Integer[] arr = basinHill.compute(grid);
++        Assert.assertEquals(11,arr[0].intValue());
++        Assert.assertEquals(7,arr[1].intValue());
++        Assert.assertEquals(7,arr[2].intValue());
++    }
++}
+Index: testSrc/su/problems/TestTreeDiameter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- testSrc/su/problems/TestTreeDiameter.java	(date 1422591058000)
++++ testSrc/su/problems/TestTreeDiameter.java	(date 1422591058000)
+@@ -0,0 +1,20 @@
++package su.problems;
++
++import org.junit.Assert;
++import su.TestUtils;
++import su.dataStructure.Node;
++
++/**
++ * Created by Akshat on 1/19/2015.
++ */
++public class TestTreeDiameter {
++
++    @org.junit.Test
++    public void testCompute()
++    {
++        Node node = TestUtils.createBinaryTree();
++        TreeDiameter longestDistanceBetween2Nodes = new TreeDiameter();
++        longestDistanceBetween2Nodes.compute(node);
++        Assert.assertEquals(4, longestDistanceBetween2Nodes.maxDia);
++    }
++}
