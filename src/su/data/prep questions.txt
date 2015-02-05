@@ -1,0 +1,46 @@
+4) DNA matching
+
+
+7) Find median from a stream of numbers and 10 smallets elements.
+
+
+12) How do indices work?
+
+14) Design a Stack that pops the element with the maximum occurence.
+15) given a number, get the next highest number with the same digits
+16) FizzBuzz - write a program to print numbers from 1 to 100. For multiples of 3, print Fizz, for multiples of 5 print Buzz, for multiples of 3 & 5 print FizzBuzz
+17) Ugly Numbers - Find the nth number in a sequence of numbers that are multiples of only 2,3 or 5.
+
+
+20) Finding peak or value in a number stream.
+21) Next smallest palindrome give a number
+22) Next highest permutation of a number.
+23) 2nd shortest path in graph given shortest path API.
+24) Maximize gold among N rooms with some constraints.
+25) Snakes and ladders problem.
+26) Create a DS that gives k most frequent words from a stream.
+
+28) Random number generator
+29) Given set of points, find line which goes through maximum points.
+30) Create a DS to find top n words from a stream of words
+
+32) Find the max money a thief can steal from a row of houses.
+
+
+
+36) given a big array of stock prices, how can we maximise profit by buying & selling when multiple buys & sells are possible. gave O(n) sol
+
+37) given a binary tree, find the longest distance between any 2 nodes in the tree.
+38) Next high pointer in Linked List.
+39) Max Interval overlap.
+
+palantir -:
+
+design a persistent stack
+binary search in an increasing/decreasing array
+sort array based on frequency
+largest palindrome in a string
+Make an anagram solver that returns all valid dictionary words given a set of characters.
+I'm thinking of a number between 1 and 1000, how would you find out what number it is by asking me just 'yes' or 'no' questions?
+topological sort
+Given two unsorted arrays A and B in which B can accommodate in A
