@@ -51,16 +51,30 @@ public class Square {
         return board.getLastSquare()==this;
     }
 
-    public Square moveAndLand(int shift){
+    public Square moveAndLand(int shift) {
         int currentPos = this.getPosition();
 
-        if(currentPos+shift > this.getLastSquare().getPosition())
-        {
-            System.out.println("Move Invalid !! not moving");
+        if (currentPos + shift > this.getLastSquare().getPosition()) {
+            System.out.print("------Move Invalid !! not moving-----");
             return this;
-        }else{
-            return this.findRelativeSquare(currentPos + shift).getSquareRole().warp();
+        } else {
+            Square destination = this.findRelativeSquare(currentPos + shift).getSquareRole().warp();
+            if (destination.isOccupied()) {
+                System.out.print("-----look who's here !!! beating "+destination.getPlayer().getName()+" sending to start------");
+                Player beatenPlayer = destination.getPlayer();
+                board.getFirstSquare().enter(beatenPlayer);
+                beatenPlayer.setCurrentSquare(board.getFirstSquare());
+            }
+            return destination;
         }
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public boolean isOccupied() {
+        return player != null;
     }
 }
 

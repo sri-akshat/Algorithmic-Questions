@@ -9,21 +9,21 @@ import java.util.List;
  */
 public class BookCatalogue {
 
-    private TrieNode<Book> treeByGenre;
-
-//  TODO :  Remove genre and search should work for all genres
+    private TrieNode<Book> bookTrie;
 
     public BookCatalogue() {
-        treeByGenre =  new TrieNode<>('#');
+        bookTrie =  new TrieNode<>('#');
     }
 
     public void addBook(String name, String author, Genre genre)
     {
-        treeByGenre.insert(genre.name(), new Book(name, author, genre));
+        bookTrie.insert(genre.name(), new Book(name, author, genre));
+        bookTrie.insert(name, new Book(name, author, genre));
+        bookTrie.insert(author, new Book(name, author, genre));
     }
 
-    public List<Book> search(Genre genre)
+    public List<Book> search(String query)
     {
-        return treeByGenre.searchDocuments(genre.name());
+        return bookTrie.searchDocuments(query);
     }
 }
