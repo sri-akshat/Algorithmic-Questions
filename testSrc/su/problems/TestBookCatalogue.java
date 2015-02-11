@@ -22,10 +22,19 @@ public class TestBookCatalogue {
         bookCatalogue.addBook("Black Holes", "Stephen Hawkings", Genre.Science);
         bookCatalogue.addBook("Relativity", "Albert Einstein", Genre.Science);
 
-        List<Book> books = bookCatalogue.search(Genre.Biography);
+        List<Book> books = bookCatalogue.search(Genre.Biography.name());
         Assert.assertEquals(2, books.size());
         Assert.assertEquals("Notes To Myself", books.get(0).getName());
         Assert.assertEquals("Sachin Tendulkar Biography", books.get(1).getName());
+
+        books = bookCatalogue.search("Notes To Myself");
+        Assert.assertEquals(1, books.size());
+        Assert.assertEquals("Notes To Myself", books.get(0).getName());
+
+        books = bookCatalogue.search("Ashwin Sanghi");
+        Assert.assertEquals(1, books.size());
+        Assert.assertEquals("Rasabal Line", books.get(0).getName());
+
 
     }
 }
