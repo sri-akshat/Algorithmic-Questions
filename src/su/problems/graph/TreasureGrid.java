@@ -20,14 +20,14 @@ public class TreasureGrid
 
             for (Entry<Integer, Integer> entry : getTraversablePaths(grid, x, y))
             {
-//                if(!alreadyTraversed.contains(entry.getKey()+","+entry.getValue())) {
+                if(!alreadyTraversed.contains(entry.getKey()+","+entry.getValue())) {
                     Map<Integer, Integer> newPath = new LinkedHashMap<>(path);
                     System.out.println(entry.getKey()+","+entry.getValue());
                     newPath.put(entry.getKey(), entry.getValue());
                     Set<String> newAlreadyTraversedPath = new HashSet<>(alreadyTraversed);
                     newAlreadyTraversedPath.add(entry.getKey()+","+entry.getValue());
                     compute(grid, entry.getKey(), entry.getValue(), end, newPath, newAlreadyTraversedPath);
-//                }
+                }
             }
         }
 

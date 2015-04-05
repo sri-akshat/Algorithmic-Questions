@@ -1,8 +1,5 @@
 package su.design.snakeAndLadder.square;
 
-import su.design.snakeAndLadder.square.Square;
-import su.design.snakeAndLadder.square.SquareRole;
-
 /**
  * Created by Akshat on 2/11/2015.
  */

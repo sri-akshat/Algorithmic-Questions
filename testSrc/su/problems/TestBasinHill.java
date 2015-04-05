@@ -2,6 +2,8 @@ package su.problems;
 
 import org.junit.Assert;
 
+import java.util.List;
+
 /**
  * Created by Akshat on 1/23/2015.
  */
@@ -17,9 +19,9 @@ public class TestBasinHill {
                 {1, 2, 5, 4, 2},
                 {3, 3, 5, 2, 1}};
         BasinHill basinHill = new BasinHill();
-        Integer[] arr = basinHill.compute(grid);
-        Assert.assertEquals(11,arr[0].intValue());
-        Assert.assertEquals(7,arr[1].intValue());
-        Assert.assertEquals(7,arr[2].intValue());
+        List<Integer> arr = basinHill.compute(grid);
+        Assert.assertEquals(11,arr.get(2).intValue());
+        Assert.assertEquals(7,arr.get(1).intValue());
+        Assert.assertEquals(7,arr.get(0).intValue());
     }
 }

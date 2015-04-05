@@ -17,9 +17,10 @@ public class BookCatalogue {
 
     public void addBook(String name, String author, Genre genre)
     {
-        bookTrie.insert(genre.name(), new Book(name, author, genre));
-        bookTrie.insert(name, new Book(name, author, genre));
-        bookTrie.insert(author, new Book(name, author, genre));
+        Book book = new Book(name, author, genre);
+        bookTrie.insert(genre.name(), book);
+        bookTrie.insert(name, book);
+        bookTrie.insert(author, book);
     }
 
     public List<Book> search(String query)
