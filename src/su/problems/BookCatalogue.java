@@ -9,20 +9,22 @@ import java.util.List;
  */
 public class BookCatalogue {
 
-    private TrieNode<Book> treeByGenre;
-
+    private TrieNode<Book> bookTrie;
 
     public BookCatalogue() {
-        treeByGenre =  new TrieNode<>('#');
+        bookTrie =  new TrieNode<>('#');
     }
 
     public void addBook(String name, String author, Genre genre)
     {
-        treeByGenre.insert(genre.name(), new Book(name, author, genre));
+        Book book = new Book(name, author, genre);
+        bookTrie.insert(genre.name(), book);
+        bookTrie.insert(name, book);
+        bookTrie.insert(author, book);
     }
 
-    public List<Book> search(Genre genre)
+    public List<Book> search(String query)
     {
-        return treeByGenre.searchDocuments(genre.name());
+        return bookTrie.searchDocuments(query);
     }
 }

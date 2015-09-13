@@ -50,7 +50,7 @@ public class NumToWord{
     public String getWord(int[] arr, StringBuilder sb)
     {
         if(arr.length==0)
-            return sb.toString();
+            return sb.substring(0,sb.length()-1);
 
         int curr ;
         if(arr.length%2!=0){
@@ -73,7 +73,7 @@ public class NumToWord{
 
         int[] newArr = new int[arr.length-1];
         System.arraycopy(arr,1,newArr,0, arr.length-1);
-        getWord(newArr, sb);
-        return sb.substring(0,sb.length()-1);
+
+        return getWord(newArr, sb);
     }
 }
