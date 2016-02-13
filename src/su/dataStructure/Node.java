@@ -54,4 +54,8 @@ public class Node implements Cloneable {
     public int getLevel() {
         return level;
     }
+
+    public boolean isLeaf() {
+        return left==null && right==null;
+    }
 }
