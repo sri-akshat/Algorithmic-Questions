@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="geoCode">
+    <output-path>$PROJECT_DIR$/build/classes/artifacts/geoCode</output-path>
+    <root id="archive" name="geoCode.jar">
+      <element id="module-output" name="Algorithmic-Questions" />
+      <element id="library" level="project" name="Gradle: org.apache.httpcomponents:httpcore:4.4.3" />
+      <element id="library" level="project" name="Gradle: org.codehaus.jackson:jackson-core-asl:1.9.13" />
+      <element id="library" level="project" name="Gradle: org.apache.httpcomponents:httpclient:4.5.1" />
+      <element id="library" level="project" name="Gradle: org.codehaus.jackson:jackson-mapper-asl:1.9.13" />
+    </root>
+  </artifact>
+</component>
