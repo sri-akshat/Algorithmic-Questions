@@ -1,0 +1,5 @@
+Case #1: IMPOSSIBLE
+Case #2: POSSIBLE
+01
+01
+Case #3: IMPOSSIBLE

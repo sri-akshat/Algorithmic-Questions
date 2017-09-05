@@ -17,6 +17,87 @@ import java.net.URLEncoder;
  */
 public class GeoCodeTest {
 
+
+    class GoogleGeoCode {
+        @JsonProperty("status")
+        String status;
+
+        public GoogleGeoResult[] getResults() {
+            return results;
+        }
+        @JsonProperty("results")
+        private GoogleGeoResult [] results;
+        @JsonProperty("exclude_from_slo")
+        private Boolean exclude_from_slo;
+        @JsonProperty("error_message")
+        String error_message;
+    }
+
+    class GoogleGeoResult   {
+        @JsonProperty("address_components")
+        private GoogleGeoAdressComponent [] address_components;
+        @JsonProperty("formatted_address")
+        private String formatted_address;
+
+        public GoogleGeoGeometry getGeometry() {
+            return geometry;
+        }
+        @JsonProperty("geometry")
+        private GoogleGeoGeometry geometry;
+        @JsonProperty("partial_match")
+        private Boolean partial_match;
+        @JsonProperty("place_id")
+        private String place_id;
+        @JsonProperty("types")
+        private String [] types;
+    }
+
+    class GoogleGeoAdressComponent {
+        @JsonProperty("long_name")
+        private String long_name;
+        @JsonProperty("short_name")
+        private String short_name;
+        @JsonProperty("types")
+        private String [] types;
+    }
+
+    class GoogleGeoGeometry {
+        @JsonProperty("bounds")
+        private GoogleGeoBounds bounds;
+
+        public GoogleGeoLatLng getLocation() {
+            return location;
+        }
+        @JsonProperty("location")
+        private GoogleGeoLatLng location;
+        @JsonProperty("location_type")
+        private String location_type;
+        @JsonProperty("viewport")
+        private GoogleGeoBounds viewport;
+    }
+
+    class GoogleGeoBounds   {
+        @JsonProperty("northeast")
+        private GoogleGeoLatLng northeast;
+        @JsonProperty("southwest")
+        private GoogleGeoLatLng southwest;
+    }
+
+    class GoogleGeoLatLng {
+        public String getLat() {
+            return lat;
+        }
+
+        public String getLng() {
+            return lng;
+        }
+        @JsonProperty("lat")
+        private String lat;
+        @JsonProperty("lng")
+        private String lng;
+    }
+
+
     /**
      * Given an address asks google for geocode
      *
@@ -90,81 +171,4 @@ public class GeoCodeTest {
 
 }
 
- class GoogleGeoCode {
-     @JsonProperty("status")
-     String status;
 
-     public GoogleGeoResult[] getResults() {
-         return results;
-     }
-     @JsonProperty("results")
-     private GoogleGeoResult [] results;
-     @JsonProperty("exclude_from_slo")
-     private Boolean exclude_from_slo;
-     @JsonProperty("error_message")
-     String error_message;
-}
-
- class GoogleGeoResult   {
-     @JsonProperty("address_components")
-    private GoogleGeoAdressComponent [] address_components;
-     @JsonProperty("formatted_address")
-    private String formatted_address;
-
-     public GoogleGeoGeometry getGeometry() {
-         return geometry;
-     }
-     @JsonProperty("geometry")
-     private GoogleGeoGeometry geometry;
-     @JsonProperty("partial_match")
-    private Boolean partial_match;
-     @JsonProperty("place_id")
-    private String place_id;
-     @JsonProperty("types")
-    private String [] types;
-}
-
- class GoogleGeoAdressComponent {
-     @JsonProperty("long_name")
-    private String long_name;
-     @JsonProperty("short_name")
-    private String short_name;
-     @JsonProperty("types")
-    private String [] types;
-}
-
- class GoogleGeoGeometry {
-     @JsonProperty("bounds")
-    private GoogleGeoBounds bounds;
-
-     public GoogleGeoLatLng getLocation() {
-         return location;
-     }
-     @JsonProperty("location")
-     private GoogleGeoLatLng location;
-     @JsonProperty("location_type")
-    private String location_type;
-     @JsonProperty("viewport")
-    private GoogleGeoBounds viewport;
-}
-
- class GoogleGeoBounds   {
-     @JsonProperty("northeast")
-    private GoogleGeoLatLng northeast;
-     @JsonProperty("southwest")
-    private GoogleGeoLatLng southwest;
-}
-
- class GoogleGeoLatLng {
-     public String getLat() {
-         return lat;
-     }
-
-     public String getLng() {
-         return lng;
-     }
-     @JsonProperty("lat")
-     private String lat;
-     @JsonProperty("lng")
-    private String lng;
-}  

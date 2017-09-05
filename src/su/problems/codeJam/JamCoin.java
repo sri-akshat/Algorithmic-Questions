@@ -22,8 +22,8 @@ public class JamCoin {
         readPrimes();
         generateJamCoins(65000);
 
-        fin = new FileInputStream("ip1.txt");
-        fop = new FileWriter("op1.txt");
+        fin = new FileInputStream("/Users/asrivastava6/myProjects/Algorithmic-Questions/resource/ip1.txt");
+        fop = new FileWriter("/Users/asrivastava6/myProjects/Algorithmic-Questions/resource/op1.txt");
 
         Scanner s = new Scanner(fin);
         int num = s.nextInt();
